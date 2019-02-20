@@ -1,0 +1,19 @@
+---
+- name: "test the connectivity"
+  hosts: all
+  sudo: yes
+  tasks:
+    ping:
+
+
+- name: "testing"
+  hosts: vm2
+  sudo: yes
+
+  tasks:
+  - name: Install apache
+    apt:
+      update_cache: true
+    apt:
+      name: apache2
+      state: present

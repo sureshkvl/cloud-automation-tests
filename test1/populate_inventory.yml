@@ -1,0 +1,11 @@
+---
+- name: "Populate Ansible Inventory/hosts file"
+  hosts: vm1
+  gather_facts: false
+  become: true
+  connection: local
+
+  tasks:
+  - name: create Inventory
+    shell: "terraform-inventory -u {{ username }} -k {{ xxxxx }} vm1"
+    register: output

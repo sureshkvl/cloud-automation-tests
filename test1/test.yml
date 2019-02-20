@@ -1,0 +1,9 @@
+
+- name: "testing"
+  hosts: vm1
+  sudo: yes
+
+  tasks:
+  - name: query
+    shell: "curl {{ serverip }}"
+    register: output

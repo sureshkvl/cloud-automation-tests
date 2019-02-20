@@ -1,0 +1,13 @@
+---
+- name: "Infra Orchestration"
+  hosts: vm1
+  gather_facts: false
+  become: true
+  connection: local
+
+  tasks:
+  - name: delete infra
+    terraform:
+    project_path: '/opt/stack/cloud-automation/terraform/snat'
+    lock: true
+    state: absent
