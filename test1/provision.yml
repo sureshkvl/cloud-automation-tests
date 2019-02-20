@@ -3,8 +3,13 @@
   hosts: all
   sudo: yes
   tasks:
+  - name: test connectivity
     ping:
-
+    register: task_result
+    #command: echo {{ task_result }}
+    #until: task_result == "pong"
+    #retries: 5
+    #delay: 1
 
 - name: "testing"
   hosts: vm2

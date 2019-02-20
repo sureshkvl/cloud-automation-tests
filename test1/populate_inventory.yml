@@ -1,11 +1,10 @@
 ---
 - name: "Populate Ansible Inventory/hosts file"
-  hosts: vm1
+  hosts: localhost
   gather_facts: false
   become: true
   connection: local
-
   tasks:
   - name: create Inventory
-    shell: "terraform-inventory -u {{ username }} -k {{ xxxxx }} vm1"
+    shell: "terraform-inventory -u ubuntu -k testkey.pem -b 172.24.4.7"
     register: output

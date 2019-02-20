@@ -1,13 +1,14 @@
 ---
-- name: "Infra Orchestration"
-  hosts: vm1
+- name: "Delete Orchestration"
+  hosts: localhost
   gather_facts: false
   become: true
   connection: local
 
   tasks:
-  - name: delete infra
+  - name: destroy infra
     terraform:
-    project_path: '/opt/stack/cloud-automation/terraform/snat'
-    lock: true
-    state: absent
+      #project_path: '/opt/stack/cloud-automation/terraform/snat'
+      project_path: '{{playbook_dir}}'
+      lock: true
+      state: absent

@@ -1,4 +1,4 @@
-resource "openstack_compute_instance_v2" "vm1" {                                                    [5/1864]
+resource "openstack_compute_instance_v2" "vm1" { 
   name            = "vm1"
   image_id        = "${var.image_id}"
   flavor_id       = "${var.flavor_id}"
@@ -42,5 +42,3 @@ resource "openstack_compute_floatingip_associate_v2" "fip_2" {
   floating_ip = "${openstack_networking_floatingip_v2.fip_2.address}"
   instance_id = "${openstack_compute_instance_v2.vm2.id}"
 }
-
-

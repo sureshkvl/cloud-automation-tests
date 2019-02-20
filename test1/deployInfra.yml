@@ -1,6 +1,6 @@
 ---
 - name: "Infra Orchestration"
-  hosts: vm1
+  hosts: localhost
   gather_facts: false
   become: true
   connection: local
@@ -8,7 +8,9 @@
   tasks:
   - name: deploy infra
     terraform:
-      project_path: '/opt/stack/cloud-automation/terraform/snat'
+      #project_path: '/opt/stack/cloud-automation/terraform/snat'
+      force_init: yes
+      project_path: '{{playbook_dir}}'
       lock: true
       state: present
 
