@@ -6,10 +6,15 @@
   - name: test connectivity
     ping:
     register: task_result
-    #command: echo {{ task_result }}
-    #until: task_result == "pong"
-    #retries: 5
-    #delay: 1
+    until: task_result.failed
+    retries: 5
+    delay: 1
+    ignore_errors: True
+
+  - name: debug
+    debug:
+      msg: " {{ task_result }} "
+
 
 - name: "testing"
   hosts: vm2
@@ -22,3 +27,4 @@
     apt:
       name: apache2
       state: present
+*/
