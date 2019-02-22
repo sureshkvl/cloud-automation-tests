@@ -32,7 +32,7 @@
     apt:
       name: apache2
       state: present
-      register: task_result
+    register: task_result
 
   - debug:
       var: task_result
