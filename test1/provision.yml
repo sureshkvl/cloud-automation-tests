@@ -1,5 +1,6 @@
 ---
-- hosts: all
+- name: "Verify the SSH Reachability to the VMs"
+  hosts: all
   gather_facts: false
   force_handlers: true
   any_errors_fatal: false
@@ -19,7 +20,7 @@
         var: task_result
 
 
-- name: "testing"
+- name: "Install Apache webserver in vm2"
   gather_facts: false
   hosts: vm2
   become: yes
@@ -31,3 +32,7 @@
     apt:
       name: apache2
       state: present
+      register: task_result
+
+  - debug:
+      var: task_result
