@@ -20,6 +20,7 @@
 
 
 - name: "testing"
+  gather_facts: false
   hosts: vm2
   become: yes
 
