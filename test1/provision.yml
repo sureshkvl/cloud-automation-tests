@@ -11,7 +11,7 @@
       register: task_result
       until: task_result.changed == false
       retries: 10
-      delay: 10
+      delay: 1
       ignore_unreachable: true
       ignore_errors: true
 

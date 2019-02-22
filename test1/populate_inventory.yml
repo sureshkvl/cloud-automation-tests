@@ -8,3 +8,5 @@
   - name: create Inventory
     shell: "terraform-inventory -u ubuntu -k testkey.pem -b 172.24.4.7"
     register: output
+  - debug:
+      var: task_result

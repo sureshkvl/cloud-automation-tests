@@ -17,6 +17,8 @@
     retries: 5
     delay: 1
 
+  - debug:
+      var: task_result
 
 
   
