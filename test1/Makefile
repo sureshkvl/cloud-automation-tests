@@ -1,3 +1,10 @@
+
+#test variables
+user_name=ubuntu
+key=testkey.pem
+bastion=172.24.4.7
+server_ip=192.168.1.3
+
 default: all
 
 all:  deploy provision test destroy
@@ -7,7 +14,7 @@ deploy:
 	ansible-playbook deployInfra.yml
 	#discover bastion name or ip ???
 	echo "Populate the Ansible Inventory file"
-	ansible-playbook populate_inventory.yml -e "user_name=ubuntu key=testkey.pem bastion=172.24.4.7"
+	ansible-playbook populate_inventory.yml -e "user_name=$(user_name) key=$(key) bastion=$(bastion)"
 
 provision:
 	echo "Wait for 30 sec (instances to bootup)  "
@@ -18,7 +25,7 @@ provision:
 test:
 	echo "Perform the tests"	
 	# discover the vm2 private ip??
-	ansible-playbook -i hosts test.yml -e "serverip=192.168.1.3"
+	ansible-playbook -i hosts test.yml -e "server_ip=$(server_ip)"
 
 destroy:
 	echo "Destroying the Infrastructure"		
