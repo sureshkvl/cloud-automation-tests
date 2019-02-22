@@ -1,24 +1,27 @@
 ---
-- name: "test the connectivity"
-  hosts: all
-  sudo: yes
-  tasks:
-  - name: test connectivity
-    ping:
-    register: task_result
-    until: task_result.failed
-    retries: 5
-    delay: 1
-    ignore_errors: True
+- hosts: all
+  gather_facts: false
+  force_handlers: true
+  any_errors_fatal: false
 
-  - name: debug
-    debug:
-      msg: " {{ task_result }} "
+  tasks:
+    - meta: clear_host_errors
+
+    - ping:
+      register: task_result
+      until: task_result.changed == false
+      retries: 10
+      delay: 10
+      ignore_unreachable: true
+      ignore_errors: true
+
+    - debug:
+        var: task_result
 
 
 - name: "testing"
   hosts: vm2
-  sudo: yes
+  become: yes
 
   tasks:
   - name: Install apache
@@ -27,4 +30,3 @@
     apt:
       name: apache2
       state: present
-*/
