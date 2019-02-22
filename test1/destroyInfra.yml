@@ -8,7 +8,6 @@
   tasks:
   - name: destroy infra
     terraform:
-      #project_path: '/opt/stack/cloud-automation/terraform/snat'
       project_path: '{{playbook_dir}}'
       lock: true
       state: absent

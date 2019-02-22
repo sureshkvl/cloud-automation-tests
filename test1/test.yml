@@ -1,12 +1,14 @@
 ---
 - name: "testing"
+  gather_facts: false
+  become: true
   hosts: vm1
-  sudo: yes
 
   tasks:
-  - name: query
+  - name: curl query
     shell: "curl 192.168.1.3"
     ignore_errors: true
-    register: output
+    register: task_result
 
-
+  - debug:
+      var: task_result
