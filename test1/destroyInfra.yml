@@ -11,3 +11,7 @@
       project_path: '{{playbook_dir}}'
       lock: true
       state: absent
+    register: task_result
+
+  - debug:
+      var: task_result    

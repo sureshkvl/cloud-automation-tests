@@ -13,7 +13,8 @@
       lock: true
       state: present
     register: task_result
-    until: task_result | succeeded
+    #until: task_result | succeeded
+    until: task_result is succeeded
     retries: 5
     delay: 1
 
