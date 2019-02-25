@@ -1,0 +1,13 @@
+endpoint_type="internalURL"
+export OS_ENDPOINT_TYPE=$endpoint_type
+export NOVA_ENDPOINT_TYPE=$endpoint_type
+export CINDER_ENDPOINT_TYPE=$endpoint_type
+export TROVE_ENDPOINT_TYPE=$endpoint_type
+export GLANCE_ENDPOINT_TYPE=$endpoint_type
+export KEYSTONE_ENDPOINT_TYPE=$endpoint_type
+export OS_TENANT_NAME='demo'
+export OS_USERNAME='demo'
+export OS_PASSWORD='openstack123'
+export OS_AUTH_URL='http://10.0.1.8:5000/v2.0'
+export OS_REGION_NAME='RegionOne'
+export OS_AUTH_PLUGIN='v2password'

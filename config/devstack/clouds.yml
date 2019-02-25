@@ -1,0 +1,8 @@
+clouds:
+ tenant1:
+   region_name: RegionOne
+   auth:
+     username: 'demo'
+     password: 'openstack123'
+     project_name: 'demo'
+     auth_url: 'http://10.0.1.8:5000/v2.0'
