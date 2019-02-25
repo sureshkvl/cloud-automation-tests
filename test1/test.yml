@@ -2,7 +2,7 @@
 - name: "testing"
   gather_facts: false
   become: true
-  hosts: vm1
+  hosts: bastionvm
 
   tasks:
   - name: curl query
