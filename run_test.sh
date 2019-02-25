@@ -4,33 +4,33 @@ set -e
 
 #env
 
-echo "$ENV"
+#echo "$ENV"
 
-if [ $ENV == "devstack1" ]
+if [ $ENV == "devstack" ]
 then
 	unset HTTP_PROXY
-elif [ $ENV == "devstack2" ]
+elif [ $ENV == "devstack1" ]
 then
 	unset HTTP_PROXY
 fi
 
-
 echo "Run Tests... on $ENV"
-env
+#env
 
 
 source config/$ENV/tenant1.rc
 
 #setup the temporary  directory for running the test
+#check and delete testrun directory if exists??
 mkdir testrun
 # copy the environment and test in this folder
 cp config/$ENV/* testrun/.
 cp config/test-key testrun/.
 cp config/test-key.pub testrun/.
 
-cp tests/$TEST testrun/.
+cp tests/$TEST/* testrun/.
 
-make -C testrun -f Makefile
+make -C testrun -d -f Makefile
 
 
 #delete the working dir

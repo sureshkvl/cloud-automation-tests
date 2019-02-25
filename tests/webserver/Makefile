@@ -1,7 +1,7 @@
 
 #test variables
 user_name=ubuntu
-key=testkey.pem
+key=test-key
 
 server_ip := $(shell cat terraform.tfstate | jq -r .modules[0].outputs.server_ip.value) 
 bastion_ip := $(shell cat terraform.tfstate | jq -r .modules[0].outputs.bastion_ip.value)
@@ -13,10 +13,8 @@ all:  deploy provision test destroy
 deploy:
 	echo "Deploying the Infrastructure"
 	ansible-playbook deployInfra.yml
-	#wait for 5 secs for populating the tf file
-	sleep 5
 	echo "bastion ip  is",  $(bastion_ip)
-	echo "bastion ip  is",  $(server_ip)
+	echo "server ip  is",  $(server_ip)
         
 	echo "Populate the Ansible Inventory file"
 	ansible-playbook populate_inventory.yml -e "user_name=$(user_name) key=$(key) bastion=$(bastion_ip)"
