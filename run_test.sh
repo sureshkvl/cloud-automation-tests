@@ -30,7 +30,7 @@ cp config/test-key.pub testrun/.
 
 cp tests/$TEST/* testrun/.
 
-make -C testrun -d -f Makefile
+make -C testrun -f Makefile
 
 
 #delete the working dir
