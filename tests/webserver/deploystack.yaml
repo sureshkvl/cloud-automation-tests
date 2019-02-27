@@ -1,0 +1,5 @@
+- name: deploy stack
+  terraform:
+    project_path: '{{playbook_dir}}'
+    lock: true
+    state: present

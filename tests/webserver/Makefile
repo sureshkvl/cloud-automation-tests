@@ -1,4 +1,4 @@
-#test variables
+#variables
 user_name=ubuntu
 key=test-key
 
