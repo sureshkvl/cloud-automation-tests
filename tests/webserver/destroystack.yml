@@ -1,0 +1,9 @@
+- name: destroy stack
+  terraform:
+    project_path: '{{playbook_dir}}'
+    lock: true
+    state: absent
+  register: destroy_result
+  until: destroy_result is succeeded
+  retries: 5
+  delay: 1

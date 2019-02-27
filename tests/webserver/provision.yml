@@ -8,15 +8,17 @@
   tasks:
     - meta: clear_host_errors
 
-    - ping:
+    - name: "Run SSH Ping Connectivity Check"
+      ping:
       register: task_result
-      until: task_result.changed == false
-      retries: 10
+      until: task_result is succeeded
+      retries: 5
       delay: 1
       ignore_unreachable: true
       ignore_errors: true
 
-    - debug:
+    - name: "Ver"
+      debug:
         var: task_result
 
 

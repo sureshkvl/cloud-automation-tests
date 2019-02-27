@@ -3,12 +3,16 @@
   gather_facts: false
   become: true
   hosts: bastionvm
-
   tasks:
   - name: curl query
-    shell: "curl {{ server_ip }} "
+    shell: "curl -m 1 {{ server_ip }} "
     ignore_errors: true
-    register: task_result
+    register: curl_result
 
-  - debug:
-      var: task_result
+  - name: print the curl result     
+    debug: var=curl_result
+  
+  - name: validating the curl result
+    fail:  msg=test_failed
+    when: curl_result is failed
+    

@@ -6,19 +6,29 @@
   connection: local
 
   tasks:
-  - name: deploy infra
+  - name: deploying terrafrom stack
     terraform:
       force_init: yes
       project_path: '{{playbook_dir}}'
       lock: true
       state: present
-    register: task_result
-    until: task_result is succeeded
+    register: deploy_result
+    until: deploy_result is succeeded
     retries: 5
     delay: 1
+    ignore_errors: True
 
-  - debug:
-      var: task_result
+  - name: printing the terraform deployment debug msgs
+    debug:
+      var: deploy_result
 
+  - include_tasks: destroystack.yml
+    when: deploy_result is failed
+
+
+  - name: Exit with failure message
+    fail: 
+      msg: "failure to deploy the stack"
+    when: deploy_result is failed
 
   
