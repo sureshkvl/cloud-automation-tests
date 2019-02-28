@@ -1,0 +1,13 @@
+---
+- name: "Delete the Test Setup"
+  hosts: localhost
+  gather_facts: false
+  become: true
+  connection: local
+
+  tasks:
+  - include_tasks: destroystack.yml
+    register: task_result
+
+  - debug:
+      var: task_result    

@@ -1,0 +1,20 @@
+---
+- name: "testing"
+  gather_facts: false
+  become: true
+  hosts: bastionvm
+  tasks:
+  - name: ping the sg vm2 server
+    shell: "ping -c 5 {{sg_vm2_ip}} "
+    ignore_errors: true
+    register: ping_result
+
+  - name: print the ping result     
+    debug: var=ping_result
+
+#  - name: validate the ping result     
+#    fail: 
+#      msg: "Failed response is not correct"
+#    when: ping_result.stdout contains 
+
+    

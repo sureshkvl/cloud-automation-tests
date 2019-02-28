@@ -1,0 +1,32 @@
+---
+- name: "Infra Orchestration"
+  hosts: localhost
+  gather_facts: false
+  become: true
+  connection: local
+
+  tasks:
+  
+  - name: deploy the terraform stack
+    terraform:
+      project_path: '{{playbook_dir}}'
+      force_init: true
+      lock: true
+      state: present
+    register: deploy_result
+    until: deploy_result is succeeded
+    retries: 5
+    delay: 1
+    ignore_errors: True
+
+  - name: printing the terraform deployment debug msgs
+    debug:
+      var: deploy_result
+
+  - include_tasks: destroystack.yml
+    when: deploy_result is failed
+
+  - name: Exit with failure message
+    fail: 
+      msg: "failure to deploy the stack"
+    when: deploy_result is failed  

@@ -1,0 +1,12 @@
+---
+- name: "Populate Ansible Inventory/hosts file"
+  hosts: localhost
+  gather_facts: false
+  become: true
+  connection: local
+  tasks:
+  - name: create Inventory
+    shell: "terraform-inventory -u {{ user_name }} -k {{ key }} -b {{ bastion }}"
+    register: task_result
+  - debug:
+      var: task_result
