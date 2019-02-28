@@ -7,7 +7,12 @@
 
   tasks:
   
-  - include_tasks: deployinfra.yml
+  - name: deploy the terraform stack
+    terraform:
+      project_path: '{{playbook_dir}}'
+      force_init: true
+      lock: true
+      state: present
     register: deploy_result
     until: deploy_result is succeeded
     retries: 5

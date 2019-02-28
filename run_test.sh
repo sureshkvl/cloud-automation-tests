@@ -28,6 +28,8 @@ cp config/$ENV/* testrun/.
 cp config/test-key testrun/.
 cp config/test-key.pub testrun/.
 
+chmod 400 testrun/test-key
+
 cp tests/$TEST/* testrun/.
 
 make -C testrun -f Makefile

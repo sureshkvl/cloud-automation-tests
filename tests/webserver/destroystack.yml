@@ -7,3 +7,6 @@
   until: destroy_result is succeeded
   retries: 5
   delay: 1
+
+- debug:
+  var: destroy_result 

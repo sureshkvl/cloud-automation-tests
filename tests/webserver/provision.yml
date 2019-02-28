@@ -22,7 +22,7 @@
         var: task_result
 
 
-- name: "Install Apache webserver in vm2"
+- name: "Install,configure and run Apache webserver in vm2"
   gather_facts: false
   hosts: vm2
   become: yes
@@ -36,5 +36,8 @@
       state: present
     register: task_result
 
-  - debug:
-      var: task_result
+  - name: configure apache
+    script: aconfig.sh
+
+  - name: restart apache
+    service: name=httpd state=restarted
