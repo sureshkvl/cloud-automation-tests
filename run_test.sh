@@ -3,7 +3,8 @@ set -u
 set -e
 
 #env
-
+export ENV=devstack
+export TEST=webserver
 #echo "$ENV"
 
 if [ $ENV == "devstack" ]

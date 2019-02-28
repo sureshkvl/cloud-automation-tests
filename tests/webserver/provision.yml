@@ -38,6 +38,3 @@
 
   - name: configure apache
     script: aconfig.sh
-
-  - name: restart apache
-    service: name=httpd state=restarted
