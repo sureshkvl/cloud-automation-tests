@@ -10,3 +10,4 @@ variable private_key {
 variable key_pair {
   default = "test-key"
 }
+

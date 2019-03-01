@@ -13,3 +13,4 @@ variable flavor_id {
 variable region {
   default = "RegionOne"
 }
+

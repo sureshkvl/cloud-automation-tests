@@ -2,7 +2,7 @@
 - name: "testing"
   gather_facts: false
   become: true
-  hosts: bastionvm
+  hosts: sg_vm1
   tasks:
   - name: ping the sg vm2 server
     shell: "ping -c 5 {{sg_vm2_ip}} "
@@ -11,6 +11,17 @@
 
   - name: print the ping result     
     debug: var=ping_result
+
+  - name: update the security group to block ping
+
+  # Create a security group rule
+  - os_security_group_rule:
+      cloud: mordred
+      security_group: foo
+      protocol: icmp
+      port_range_min: 80
+      port_range_max: 80
+      remote_ip_prefix: 0.0.0.0/0    
 
 #  - name: validate the ping result     
 #    fail: 
