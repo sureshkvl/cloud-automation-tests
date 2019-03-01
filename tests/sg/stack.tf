@@ -93,3 +93,13 @@ resource "openstack_compute_floatingip_associate_v2" "fip_1" {
   instance_id = "${openstack_compute_instance_v2.sg_vm1.id}"
 }
 
+
+
+output "sg_vm1_fip" {
+  value = "${openstack_networking_floatingip_v2.sg_vm1_fip.address}"
+}
+
+
+output "sg_vm2_ip" {
+  value = "${openstack_compute_instance_v2.sg_vm2.network.0.fixed_ip_v4}"
+}
