@@ -21,6 +21,28 @@ resource "openstack_compute_secgroup_v2" "sg_secgroup" {
 }
 
 
+
+resource "openstack_compute_secgroup_v2" "sg_secgroup_backend" {
+  region = "${var.region}"
+  name = "sg_secgroup_backend"
+  description = "sg_secgroup_backend"
+  rule {
+    from_port = "-1"
+    to_port = "-1"
+    ip_protocol = "icmp"
+    cidr = "0.0.0.0/0"
+    from_group_id = ""
+  }
+  rule {
+    from_port = "22"
+    to_port = "22"
+    ip_protocol = "tcp"
+    cidr = "0.0.0.0/0"
+    from_group_id = ""
+  }
+}
+
+
 /* Network and Subnet */
 
 resource "openstack_networking_network_v2" "sg_net" {
@@ -75,7 +97,7 @@ resource "openstack_compute_instance_v2" "sg_vm2" {
   name = "sg_vm2"
   image_id = "${var.image_id}"
   flavor_id = "${var.flavor_id}"
-  security_groups = ["${openstack_compute_secgroup_v2.sg_secgroup.id}"]  
+  security_groups = ["${openstack_compute_secgroup_v2.sg_secgroup_backend.id}"]  
   network {
     uuid = "${openstack_networking_network_v2.sg_net.id}"
   }
