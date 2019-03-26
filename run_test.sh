@@ -33,6 +33,7 @@ chmod 400 testrun/test-key
 
 cp tests/$TEST/* testrun/.
 
+source testrun/tenant1.rc
 make -C testrun -f Makefile
 
 

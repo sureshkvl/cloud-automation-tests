@@ -1,7 +1,6 @@
 ---
 - name: "testing"
   gather_facts: false
-  become: true
   hosts: sg_vm1
   tasks:
 
@@ -15,10 +14,13 @@
 
   - name: update the security group to block ping
     delegate_to: localhost
-    os_security_group:
-      cloud: tenant1
-      state: absent
-      name: sg_secgroup_backend  
+    shell: |
+      openstack port set --no-security-group port_1
+    register: task_result
+
+  - debug:
+      var: task_result
+
 
   - name: ping the sg vm2 server
     shell: "ping -c 5 {{sg_vm2_ip}} "
