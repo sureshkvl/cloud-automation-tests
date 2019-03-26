@@ -76,6 +76,14 @@ resource "openstack_networking_router_interface_v2" "router_net_itf" {
 }
 
 
+resource "openstack_networking_port_v2" "port_1" {
+  name           = "port_1"
+  network_id     = "${openstack_networking_network_v2.sg_net.id}"
+  admin_state_up = "true"
+}
+
+
+
 /* Create a Two VMs */
 
 
@@ -99,7 +107,7 @@ resource "openstack_compute_instance_v2" "sg_vm2" {
   flavor_id = "${var.flavor_id}"
   security_groups = ["${openstack_compute_secgroup_v2.sg_secgroup_backend.id}"]  
   network {
-    uuid = "${openstack_networking_network_v2.sg_net.id}"
+    port = "${oopenstack_networking_port_v2.port_1.id}"
   }
   key_pair = "${var.key_pair}"
 }
