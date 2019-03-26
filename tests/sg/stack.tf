@@ -80,6 +80,10 @@ resource "openstack_networking_port_v2" "port_1" {
   name           = "port_1"
   network_id     = "${openstack_networking_network_v2.sg_net.id}"
   admin_state_up = "true"
+  security_group_ids  = ["${openstack_compute_secgroup_v2.sg_secgroup_backend.id}"] 
+  fixed_ip = {
+    subnet_id = "${openstack_networking_subnet_v2.sg_subnet.id}"
+  }
 }
 
 
@@ -105,9 +109,8 @@ resource "openstack_compute_instance_v2" "sg_vm2" {
   name = "sg_vm2"
   image_id = "${var.image_id}"
   flavor_id = "${var.flavor_id}"
-  security_groups = ["${openstack_compute_secgroup_v2.sg_secgroup_backend.id}"]  
   network {
-    port = "${oopenstack_networking_port_v2.port_1.id}"
+    port = "${openstack_networking_port_v2.port_1.id}"
   }
   key_pair = "${var.key_pair}"
 }
