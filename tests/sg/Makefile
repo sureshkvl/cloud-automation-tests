@@ -1,9 +1,3 @@
-#SG Test
-#
-#
-#
-#
-#
 #variables
 user_name=ubuntu
 key=test-key

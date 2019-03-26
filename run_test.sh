@@ -15,7 +15,12 @@ then
 	unset HTTP_PROXY
 fi
 
-echo "Run Tests... on $ENV"
+
+echo "*********************************************************"
+echo "***** Test Environment :   $ENV"
+echo "***** Test Case Name :   $TEST"
+echo "*********************************************************"
+
 #env
 
 
@@ -34,9 +39,16 @@ chmod 400 testrun/test-key
 cp tests/$TEST/* testrun/.
 
 source testrun/tenant1.rc
+
+now=$(date +"%T")
+
+echo "**** Test Start Time :   $now"
+
 make -C testrun -f Makefile
 
-
+echo "*********************************************************"
+echo "**** Test End Time :   $now"
+echo "*********************************************************"
 #delete the working dir
 #rm -rf testrun
 
