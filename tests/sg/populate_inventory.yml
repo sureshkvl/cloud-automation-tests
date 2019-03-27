@@ -5,7 +5,7 @@
   become: true
   connection: local
   tasks:
-  - name: create Inventory
+  - name: Run terraform inventory command to generate ansible hosts file
     shell: "terraform-inventory -u {{ user_name }} -k {{ key }} -b {{ bastion }}"
     register: task_result
   - debug:

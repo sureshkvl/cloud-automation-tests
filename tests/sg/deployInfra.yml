@@ -1,5 +1,5 @@
 ---
-- name: "Infra Orchestration"
+- name: "Setup the Test Environment"
   hosts: localhost
   gather_facts: false
   become: true
@@ -7,7 +7,7 @@
 
   tasks:
   
-  - name: deploy the terraform stack
+  - name: Deploy the terraform SG Stack 
     terraform:
       project_path: '{{playbook_dir}}'
       force_init: true
@@ -19,14 +19,15 @@
     delay: 1
     ignore_errors: True
 
-  - name: printing the terraform deployment debug msgs
+  - name: Printing the terraform debug msgs
     debug:
       var: deploy_result
 
-  - include_tasks: destroystack.yml
+  - name: On Failure,  Destroy the Stack
+    include_tasks: destroystack.yml
     when: deploy_result is failed
 
-  - name: Exit with failure message
+  - name: On Failure condition, Exit with failure messag
     fail: 
       msg: "failure to deploy the stack"
     when: deploy_result is failed  

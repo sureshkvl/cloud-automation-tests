@@ -1,5 +1,5 @@
 ---
-- name: "Delete the Test Setup"
+- name: "Delete the Test Environment"
   hosts: localhost
   gather_facts: false
   become: true

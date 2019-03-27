@@ -1,4 +1,4 @@
-- name: destroy stack
+- name: Destroy the terraform test stack
   terraform:
     project_path: '{{playbook_dir}}'
     lock: true

@@ -17,6 +17,6 @@
       ignore_unreachable: true
       ignore_errors: true
 
-    - name: "Ver"
+    - name: "SSH Connectivity result"
       debug:
         var: task_result
