@@ -1,41 +1,56 @@
 ---
-- name: "testing"
+- name: "Security Group Test"
   gather_facts: false
   hosts: sg_vm1
-  tasks:
 
-  - name: ping the sg vm2 server
+  tasks:
+  - name: Ping the Backend VM
     shell: "ping -c 5 {{sg_vm2_ip}} "
     ignore_errors: true
     register: ping_result
 
-  - name: print the ping result     
+  - name: Ping Result     
     debug: var=ping_result
 
-  - debug:
-    msg: "{{ ping_result.stdout_lines[-1] | regex_search('(100% packet loss)') }}"
+  - set_fact: example_var={{ ping_result.stdout | regex_search('(, 0% packet loss)') }}
 
-  - name: update the security group to block ping
+  - name: Remove the SG from the Backend VM Port
     delegate_to: localhost
     shell: |
       openstack port set --no-security-group port_1
     register: task_result
 
-  - debug:
-      var: task_result
+  - name: Wait for 2 Seconds for Openstack settling time 
+    wait_for: timeout=2
 
-
-  - name: ping the sg vm2 server
+  - name: Ping the Backend VM Again
     shell: "ping -c 5 {{sg_vm2_ip}} "
     ignore_errors: true
-    register: ping_result
+    register: ping1_result
 
-  - name: print the ping result     
-    debug: var=ping_result
+  - name: Ping Result     
+    debug: var=ping1_result
     
+  - set_fact: example1_var={{ ping1_result.stdout | regex_search('(, 100% packet loss)') }}
+  #- debug:
+  #    var: example1_var
 
+  - set_fact: result=Passed
+    when: example1_var != ""
 
-#  - name: validate the ping result     
-#    fail: 
-#      msg: "Failed response is not correct"
-#    when: ping_result.stdout contains 
+  - set_fact: result=Failed
+    when: example1_var == ""
+
+  - name: Printing the Test Result
+    debug:
+      msg: 
+        - "***********************************************"
+        - "                                               "
+        - "     Test Result :   {{ result }}              "
+        - "                                               "
+        - "***********************************************"
+
+  #- name: Exit with failure message
+  #  fail: 
+  #    msg: "After removing SG,it Pings... FAILURE"
+  #  when: example1_var == ""
