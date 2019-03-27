@@ -10,3 +10,6 @@
     register: task_result
   - debug:
       var: task_result
+
+  - include_tasks: destroystack.yml
+    when: task_result is failed

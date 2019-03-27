@@ -21,11 +21,7 @@ echo "***** Test Environment :   $ENV"
 echo "***** Test Case Name :   $TEST"
 echo "*********************************************************"
 
-#env
-
-
 source config/$ENV/tenant1.rc
-
 #setup the temporary  directory for running the test
 #check and delete testrun directory if exists??
 mkdir testrun
@@ -40,14 +36,13 @@ cp tests/$TEST/* testrun/.
 
 source testrun/tenant1.rc
 
-now=$(date +"%T")
-
-echo "**** Test Start Time :   $now"
-
-make -C testrun -f Makefile
-
+stime=$(date +"%T")
+echo "**** Test Start Time :   $stime"
 echo "*********************************************************"
-echo "**** Test End Time :   $now"
+make -C testrun -f Makefile
+etime=$(date +"%T")
+echo "*********************************************************"
+echo "**** Test End Time :   $etime"
 echo "*********************************************************"
 #delete the working dir
 #rm -rf testrun
