@@ -7,7 +7,7 @@
 
   tasks:
   
-  - name: Deploy the terraform SG Stack 
+  - name: Deploy the terraform SNAT Stack 
     terraform:
       project_path: '{{playbook_dir}}'
       force_init: true
