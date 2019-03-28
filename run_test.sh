@@ -4,7 +4,7 @@ set -e
 
 #env
 export ENV=devstack
-export TEST=sg
+export TEST=snat
 #echo "$ENV"
 
 if [ $ENV == "devstack" ]

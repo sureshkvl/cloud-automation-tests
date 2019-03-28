@@ -1,11 +1,21 @@
 ---
-- name: "Security Group Test"
+- name: "SNAT Test"
   gather_facts: false
   hosts: sg_vm2
 
   tasks:
-  - name: Ping the Backend VM
-    shell: "ping -c 10 8.8.8.8 "
+  - name: Ping the Bastion VM Private IP
+    shell: |
+      ifconfig
+      ping -c 5 {{sg_vm1_ip}}
+    ignore_errors: true
+    register: ping1_result
+
+  - name: Ping Result     
+    debug: var=ping1_result
+
+  - name: Ping the Google DNS IP
+    shell: "ping -c 5 8.8.8.8 "
     ignore_errors: true
     register: ping_result
 

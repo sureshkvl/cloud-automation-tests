@@ -18,7 +18,7 @@ provision:
 
 test:
 	echo "Perform the tests"	
-	ansible-playbook -i hosts test.yml -e "sg_vm2_ip=$$(cat terraform.tfstate | jq -r .modules[0].outputs.sg_vm2_ip.value)"
+	ansible-playbook -i hosts test.yml -e "sg_vm1_ip=$$(cat terraform.tfstate | jq -r .modules[0].outputs.sg_vm1_ip.value)"
 
 destroy:
 	echo "Destroying the Infrastructure"		
