@@ -1,0 +1,10 @@
+- name: Destroy the terraform test stack
+  terraform:
+    project_path: '{{playbook_dir}}'
+    lock: true
+    state: absent
+  delegate_to: 127.0.0.1    
+  register: destroy_result
+  until: destroy_result is succeeded
+  retries: 5
+  delay: 1

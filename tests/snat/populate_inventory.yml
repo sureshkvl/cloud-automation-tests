@@ -1,0 +1,15 @@
+---
+- name: "Populate Ansible Inventory/hosts file"
+  hosts: localhost
+  gather_facts: false
+  become: true
+  connection: local
+  tasks:
+  - name: Run terraform inventory command to generate ansible hosts file
+    shell: "terraform-inventory -u {{ user_name }} -k {{ key }} -b {{ bastion }}"
+    register: task_result
+  - debug:
+      var: task_result
+
+  - include_tasks: destroystack.yml
+    when: task_result is failed

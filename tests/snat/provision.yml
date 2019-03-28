@@ -1,0 +1,22 @@
+---
+- name: "Verify the SSH Reachability to the VMs"
+  hosts: all
+  gather_facts: false
+  force_handlers: true
+  any_errors_fatal: false
+
+  tasks:
+    - meta: clear_host_errors
+
+    - name: "Run SSH Ping Connectivity Check"
+      ping:
+      register: task_result
+      until: task_result is succeeded
+      retries: 5
+      delay: 1
+      ignore_unreachable: true
+      ignore_errors: true
+
+    - name: "SSH Connectivity result"
+      debug:
+        var: task_result
