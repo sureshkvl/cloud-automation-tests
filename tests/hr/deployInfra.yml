@@ -1,0 +1,33 @@
+---
+- name: "Setup the Test Environment"
+  hosts: localhost
+  gather_facts: false
+  become: true
+  connection: local
+
+  tasks:
+  
+  - name: Deploy the Host Route Stack 
+    terraform:
+      project_path: '{{playbook_dir}}'
+      force_init: true
+      lock: true
+      state: present
+    register: deploy_result
+    until: deploy_result is succeeded
+    retries: 5
+    delay: 1
+    ignore_errors: True
+
+  - name: Printing the terraform debug msgs
+    debug:
+      var: deploy_result
+
+  - name: On Failure,  Destroy the Stack
+    include_tasks: destroystack.yml
+    when: deploy_result is failed
+
+  - name: On Failure condition, Exit with failure messag
+    fail: 
+      msg: "failure to deploy the stack"
+    when: deploy_result is failed  

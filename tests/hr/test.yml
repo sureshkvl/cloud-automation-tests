@@ -1,0 +1,56 @@
+---
+- name: "Security Group Test"
+  gather_facts: false
+  hosts: sg_vm1
+
+  tasks:
+  - name: Ping the Backend VM
+    shell: "ping -c 5 {{sg_vm2_ip}} "
+    ignore_errors: true
+    register: ping_result
+
+  - name: Ping Result     
+    debug: var=ping_result
+
+  - set_fact: example_var={{ ping_result.stdout | regex_search('(, 0% packet loss)') }}
+
+  - name: Remove the SG from the Backend VM Port
+    delegate_to: localhost
+    shell: |
+      openstack port set --no-security-group port_1
+    register: task_result
+
+  - name: Wait for 2 Seconds for Openstack settling time 
+    wait_for: timeout=2
+
+  - name: Ping the Backend VM Again
+    shell: "ping -c 5 {{sg_vm2_ip}} "
+    ignore_errors: true
+    register: ping1_result
+
+  - name: Ping Result     
+    debug: var=ping1_result
+    
+  - set_fact: example1_var={{ ping1_result.stdout | regex_search('(, 100% packet loss)') }}
+  #- debug:
+  #    var: example1_var
+
+  - set_fact: result=Passed
+    when: example1_var != ""
+
+  - set_fact: result=Failed
+    when: example1_var == ""
+
+  - name: Printing the Test Result
+    debug:
+      msg: 
+        - "***********************************************"
+        - "                                               "
+        - "     Test Result :   {{ result }}              "
+        - "                                               "
+        - "***********************************************"
+
+  #- name: Exit with failure message
+  #  fail: 
+  #    msg: "After removing SG,it Pings... FAILURE"
+  #  when: example1_var == ""
