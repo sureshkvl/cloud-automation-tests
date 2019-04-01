@@ -4,7 +4,7 @@ set -e
 
 #env
 export ENV=devstack
-export TEST=snat
+export TEST=hr
 #echo "$ENV"
 
 if [ $ENV == "devstack" ]
@@ -46,6 +46,6 @@ echo "*********************************************************"
 echo "**** Test End Time :   $(date +%T)"
 echo "Total Test Execution Time : $runtime seconds"
 echo "*********************************************************"
-sudo rm -rf testrun
+#sudo rm -rf testrun
 
 

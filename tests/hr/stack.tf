@@ -166,6 +166,20 @@ resource "openstack_networking_port_v2" "hr_router_port_backend" {
   }
 }
 
+
+data "template_file" "routerscript" {
+  template = "${file("cloudinit_router.yaml")}"
+}
+
+data "template_cloudinit_config" "router_cloudinit_config" {
+  part {
+    content_type = "text/cloud-config"
+    content = "${data.template_file.routerscript.rendered}"
+  }
+}
+
+
+
 resource "openstack_compute_instance_v2" "hr_router" {
   depends_on = ["openstack_networking_subnet_route_v2.hr_subnet_bastion_route1", "openstack_networking_subnet_route_v2.hr_subnet_backend_route1"]
   region = "${var.region}"
@@ -179,6 +193,8 @@ resource "openstack_compute_instance_v2" "hr_router" {
     port = "${openstack_networking_port_v2.hr_router_port_backend.id}"
   }
   key_pair = "${var.key_pair}"
+  user_data = "${data.template_cloudinit_config.router_cloudinit_config.rendered}"
+
 }
 
 resource "openstack_networking_port_v2" "hr_backend_port" {
