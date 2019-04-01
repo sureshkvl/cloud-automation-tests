@@ -4,7 +4,7 @@ key=test-key
 
 default: all
 
-all:  deploy provision test destroy
+all:  deploy provision
 
 deploy:
 	echo "Deploying the Infrastructure"

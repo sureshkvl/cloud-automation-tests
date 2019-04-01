@@ -11,7 +11,7 @@
     terraform:
       project_path: '{{playbook_dir}}'
       force_init: true
-      lock: true
+      lock: True
       state: present
     register: deploy_result
     until: deploy_result is succeeded

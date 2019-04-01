@@ -1,15 +1,21 @@
-#                                            
-#                 
-#                                           
-# FIP +--------+ 10.48.48.0/24   +--------+  10.88.88.0/24  +--------+
-# --- |Bastion |-------------> -|hr-router|---------------->|hr-router|
-#     +--------+                +--------+                  +--------+
+#
+#
+#
+#  |                                           
+# Router
+#  |                
+#  |                                           
+#  | FIP +--------+ 10.48.48.0/24   +--------+  10.88.88.0/24  +--------+
+#  |---  |Bastion |-------------> -|hr-router|---------------->|hr-backend|
+#        +--------+                +--------+                  +--------+
 #            
 #
 # Bastion -  10.88.88.0/24 via hr-router
+#            0.0.0.0/0 via 10.48.48.1
+#
+# Backend -  10.48.48.0/24 via hr-router
 #            0.0.0.0/0 via 10.88.88.1
 #
-# 
 #
 
 resource "openstack_compute_secgroup_v2" "hr_secgroup_icmp_ssh" {
@@ -45,6 +51,23 @@ resource "openstack_networking_subnet_v2" "hr_subnet_bastion" {
   ip_version = 4
   region = "${var.region}"
 }
+
+
+/* Router and Router Interface */
+
+resource "openstack_networking_router_v2" "hrrouter1" {
+  name = "hrrouter1"
+  region = "${var.region}"
+  external_network_id = "${var.public_pool_id}"
+}
+
+
+resource "openstack_networking_router_interface_v2" "router_net_itf" {
+  region = "${var.region}"
+  router_id = "${openstack_networking_router_v2.hrrouter1.id}"
+  subnet_id = "${openstack_networking_subnet_v2.hr_subnet_bastion.id}"
+}
+
 
 resource "openstack_networking_network_v2" "hr_net_backend" {
   name = "hr_net_backend"
