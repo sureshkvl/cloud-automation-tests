@@ -53,6 +53,21 @@ resource "openstack_networking_subnet_v2" "hr_subnet_bastion" {
 }
 
 
+resource "openstack_networking_subnet_route_v2" "hr_subnet_bastion_route1" {
+  depends_on = ["openstack_networking_subnet_v2.hr_subnet_bastion", "openstack_networking_port_v2.hr_router_port_bastion"]
+  subnet_id        = "${openstack_networking_subnet_v2.hr_subnet_bastion.id}"
+  destination_cidr = "10.88.88.0/24"
+  next_hop         = "${openstack_networking_port_v2.hr_router_port_bastion.all_fixed_ips.0}" 
+}
+
+resource "openstack_networking_subnet_route_v2" "hr_subnet_bastion_route2" {
+  depends_on = ["openstack_networking_subnet_v2.hr_subnet_bastion"]
+  subnet_id        = "${openstack_networking_subnet_v2.hr_subnet_bastion.id}"
+  destination_cidr = "0.0.0.0/0"
+  next_hop         = "10.48.48.1"
+}
+
+
 /* Router and Router Interface */
 
 resource "openstack_networking_router_v2" "hrrouter1" {
@@ -83,6 +98,23 @@ resource "openstack_networking_subnet_v2" "hr_subnet_backend" {
   region = "${var.region}"
 }
 
+
+
+resource "openstack_networking_subnet_route_v2" "hr_subnet_backend_route1" {
+  depends_on  = ["openstack_networking_subnet_v2.hr_subnet_backend", "openstack_networking_port_v2.hr_router_port_backend"]
+  subnet_id        = "${openstack_networking_subnet_v2.hr_subnet_backend.id}"
+  destination_cidr = "10.48.48.0/24"
+  next_hop         = "${openstack_networking_port_v2.hr_router_port_backend.all_fixed_ips.0}"
+}
+
+resource "openstack_networking_subnet_route_v2" "hr_subnet_backend_route2" {
+  depends_on = ["openstack_networking_subnet_v2.hr_subnet_backend","openstack_networking_port_v2.hr_router_port_backend"]
+  subnet_id        = "${openstack_networking_subnet_v2.hr_subnet_backend.id}"
+  destination_cidr = "0.0.0.0/0"
+  #next_hop         = "10.88.88.1"
+  next_hop         = "${openstack_networking_port_v2.hr_router_port_backend.all_fixed_ips.0}"
+}
+
 resource "openstack_networking_port_v2" "hr_bastion_port" {
   name = "hr_bastion_port"
   network_id = "${openstack_networking_network_v2.hr_net_bastion.id}"
@@ -101,7 +133,7 @@ resource "openstack_networking_floatingip_v2" "hr_bastion_fip" {
 }
 
 resource "openstack_compute_instance_v2" "hr_bastion" {
-  depends_on = ["null_resource.add_host_routes"]
+  depends_on = ["openstack_networking_subnet_route_v2.hr_subnet_bastion_route1"]
   region = "${var.region}"
   name = "hr_bastion"
   image_id = "${var.image_id}"
@@ -135,7 +167,7 @@ resource "openstack_networking_port_v2" "hr_router_port_backend" {
 }
 
 resource "openstack_compute_instance_v2" "hr_router" {
-  depends_on = ["null_resource.add_host_routes"]
+  depends_on = ["openstack_networking_subnet_route_v2.hr_subnet_bastion_route1", "openstack_networking_subnet_route_v2.hr_subnet_backend_route1"]
   region = "${var.region}"
   name = "hr_router"
   image_id = "${var.image_id}"
@@ -161,7 +193,7 @@ resource "openstack_networking_port_v2" "hr_backend_port" {
 }
 
 resource "openstack_compute_instance_v2" "hr_backend" {
-  depends_on = ["null_resource.add_host_routes"]
+  depends_on = ["openstack_networking_subnet_route_v2.hr_subnet_backend_route1"]
   region = "${var.region}"
   name = "hr_backend"
   image_id = "${var.image_id}"
@@ -172,24 +204,9 @@ resource "openstack_compute_instance_v2" "hr_backend" {
   key_pair = "${var.key_pair}"
 }
 
-resource "null_resource" "add_host_routes" {
-  triggers {
-    backend = "openstack_networking_subnet_v2.hr_subnet_backend"
-    bastion = "openstack_networking_subnet_v2.hr_subnet_bastion"
-  }
 
-  provisioner "local-exec" {
-    command = "openstack subnet set --host-route  destination=10.88.88.0/24,gateway=${openstack_networking_port_v2.hr_router_port_bastion.fixed_ip.0.ip_address} ${openstack_networking_subnet_v2.hr_subnet_bastion.id} "
-  }
-  provisioner "local-exec" {
-    command = "openstack subnet set --host-route destination=0.0.0.0/0,gateway=10.48.48.1 ${openstack_networking_subnet_v2.hr_subnet_bastion.id}"
-  }
-
-  provisioner "local-exec" {
-    command = "openstack subnet set --host-route  destination=10.48.48.0/24,gateway={openstack_networking_port_v2.hr_router_port_backend.fixed_ip.0.ip_address} ${openstack_networking_subnet_v2.hr_subnet_backend.id} "
-  }
-  provisioner "local-exec" {
-    command = "openstack subnet set --host-route destination=0.0.0.0/0,gateway=10.88.88.1 ${openstack_networking_subnet_v2.hr_subnet_backend.id}"
-  }
-
+output "bastion_fip" {
+  value = "${openstack_networking_floatingip_v2.hr_bastion_fip.address}"
 }
+
+

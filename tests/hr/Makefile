@@ -10,7 +10,7 @@ deploy:
 	echo "Deploying the Infrastructure"
 	ansible-playbook deployInfra.yml 
 	echo "Populate the Ansible Inventory file"
-	ansible-playbook populate_inventory.yml -e "user_name=$(user_name) key=$(key) bastion=$$(cat terraform.tfstate | jq -r .modules[0].outputs.sg_vm1_fip.value)"
+	ansible-playbook populate_inventory.yml -e "user_name=$(user_name) key=$(key) bastion=$$(cat terraform.tfstate | jq -r .modules[0].outputs.bastion_fip.value)"
 
 provision:
 	echo "Provisioning the Instances"	
